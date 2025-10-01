@@ -955,18 +955,32 @@ class PenCommParser {
         var offlineData = offlineData
         //        N.Log("parseSDK2OfflinePenData \(offlineData)")
         var pos: Int = 0
+        
         for _ in 0..<offlineData.nNumOfStrokes {
+            guard pos + Int(OffLineStroke.length) <= penData.count else { break }
+            
             var stroke = OffLineStroke(Array(penData[pos..<pos+Int(OffLineStroke.length)]))
             pos += OffLineStroke.length
             
+            // cap dots by remaining bytes
+            let targetDots = Int(stroke.dotCount)
+            let maxDotsByBytes = (penData.count - pos) / Dot.offlineLength
+            let dotsToRead = min(targetDots, maxDotsByBytes)
+            
             for _ in 0..<Int(stroke.dotCount){
-                let dot =  Dot(Array(penData[pos..<pos+Int(Dot.offlineLength)]), maxForce)
+                
+                guard pos + Dot.offlineLength <= penData.count else { break }
+                let dotBytes = Array(penData[pos..<pos+Dot.offlineLength])
+                let dot = Dot(dotBytes, maxForce)
                 pos += Dot.offlineLength
                 if dot.CalCheckSum == dot.nCheckSum{
                     stroke.dotArray.append(dot)
                 }
             }
             offlineData.strokeArray.append(stroke)
+            
+            // if data truncated mid-stroke, stop to avoid next header OOB
+            if dotsToRead < targetDots { break }
         }
         
         let msg = PenMessage.OFFLINE_DATA_SEND_SUCCESS(offlineData)
