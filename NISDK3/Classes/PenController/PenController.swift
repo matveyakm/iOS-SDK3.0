@@ -253,8 +253,8 @@ public class PenController: NSObject {
     }
     
     /// Offline Page Data
-    public func requestOfflinePage(_ section: UInt8,_ owner: UInt32,_ note: UInt32, _ page: UInt32, _ deleteOnFinished: Bool = true){
-        penCommParser.requestOfflineData(section, owner, note, [page], deleteOnFinished)
+    public func requestOfflinePages(_ section: UInt8,_ owner: UInt32,_ note: UInt32, _ pages: [UInt32], _ deleteOnFinished: Bool = true){
+        penCommParser.requestOfflineData(section, owner, note, pages, deleteOnFinished)
     }
     
     /// Offline Note Data
