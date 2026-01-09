@@ -175,14 +175,27 @@ class PageStrokeView: UIView {
                 break
             }
         }
-
+        
+        let type = dot.dotType
+        var num_type = -1
+        switch type {
+        case .Down:
+            num_type = 0
+            break
+        case .Move:
+            num_type = 1
+            break
+        case .Up:
+            num_type = 2
+            break
+        }
         // Отправка точки на сервер в реальном времени
         let pointJSON: [String: Any] = [
             "x": dot.x,
             "y": dot.y,
             "force": dot.force,
             "time": dot.time,
-            "dotType": dot.dotType.rawValue,  // 0-Down, 1-Move, 2-Up
+            "dotType": num_type,  // 0-Down, 1-Move, 2-Up
             "page": dot.pageInfo.page,
             "section": dot.pageInfo.section,
             "owner": dot.pageInfo.owner ,
