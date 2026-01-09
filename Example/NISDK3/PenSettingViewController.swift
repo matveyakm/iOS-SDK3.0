@@ -108,7 +108,7 @@ class PenSettingViewController: UIViewController {
 
 extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 13
+        return 14
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -172,6 +172,15 @@ extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
             cell.OnOffSwitch.tag = row
             cellValueHidden(cell: cell, switchHidden: false, settingValueHidden: true)
             cell.isHidden = penStatus?.usingSystemSetting != .On
+        }else if row == 13 {
+            cell.SettingName.text = "Server URL"
+            
+            // Загружаем сохранённый URL или дефолтный
+            let defaultURL = "91.197.0.41:5252"  // Без http и /api/dot
+            let savedBase = UserDefaults.standard.string(forKey: "ServerBaseURL") ?? defaultURL
+            cell.settingValue.text = savedBase + " ▼"  // Стрелка, чтобы было похоже на другие настройки
+            
+            cellValueHidden(cell: cell, switchHidden: true, settingValueHidden: false)
         }
         
         return cell
@@ -199,8 +208,40 @@ extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
         }else if indexPath.row == 11{
             let vc = PenFWUpdateViewController.instance()
             self.navigationController?.pushViewController(vc, animated: true)
+        }else if indexPath.row == 13 {
+            showServerURLAlert()
         }
         deselectTable()
+    }
+    func showServerURLAlert() {
+        let alertController = UIAlertController(title: "Server URL", message: "Введите IP и порт сервера (например: 91.197.0.41:5252)", preferredStyle: .alert)
+        
+        let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
+            if let textField = alertController.textFields?.first,
+               let text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+               !text.isEmpty {
+                // Сохраняем только base часть (IP:port)
+                UserDefaults.standard.set(text, forKey: "ServerBaseURL")
+                self.tableView.reloadRows(at: [IndexPath(row: 13, section: 0)], with: .automatic)
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        
+        alertController.addTextField { textField in
+            let defaultURL = "91.197.0.41:5252"
+            let saved = UserDefaults.standard.string(forKey: "ServerBaseURL") ?? defaultURL
+            textField.text = saved
+            textField.placeholder = "IP:port"
+            textField.keyboardType = .numbersAndPunctuation
+        }
+        
+        saveAction.isEnabled = true  // Можно включить сразу или добавить валидацию по желанию
+        
+        alertController.addAction(saveAction)
+        alertController.addAction(cancelAction)
+        
+        self.present(alertController, animated: true, completion: nil)
     }
     
     func alert(){

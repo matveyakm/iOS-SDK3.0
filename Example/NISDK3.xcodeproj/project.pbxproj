@@ -261,7 +261,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = K2APH36C6M;
+						DevelopmentTeam = R9NYU54WC7;
 						LastSwiftMigration = 0900;
 					};
 				};
@@ -506,12 +506,12 @@
 			baseConfigurationReference = C932D1FF4A51F1CBD8C27EF5 /* Pods-NISDK3_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = K2APH36C6M;
+				DEVELOPMENT_TEAM = R9NYU54WC7;
 				INFOPLIST_FILE = NISDK3/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.neolab.NISDK3-Example";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.matvey.NISDK3-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
@@ -523,9 +523,9 @@
 			baseConfigurationReference = 17241B3AFC499585B094EB68 /* Pods-NISDK3_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = K2APH36C6M;
+				DEVELOPMENT_TEAM = R9NYU54WC7;
 				INFOPLIST_FILE = NISDK3/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.neolab.NISDK3-Example";

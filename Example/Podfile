@@ -7,3 +7,10 @@ target 'NISDK3_Example' do
   pod 'SWXMLHash', '5.0.1'
 
 end
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '18.0'  # Или '17.0', если хотите ниже
+    end
+  end
+end
