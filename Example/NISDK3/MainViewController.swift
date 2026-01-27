@@ -65,11 +65,34 @@ class MainViewController: UIViewController {
 //        noteUpdate(supportNote: .note261)
         symbolViewSet(supportNote: .note261)
         
+        pageStrokeView.onNeedConnect = { [weak self] in
+                guard let self = self else { return }
+                
+                if PenHelper.shared.isConnected ?? false {
+                    print("Ручка уже подключена → ничего не делаем")
+                    return
+                }
+                
+                print("PageStrokeView попросила подключить ручку → запускаем процесс")
+                
+                // Твоя логика из pencilConBtnClicked, но без показа UI, если хочешь авто-режим
+                if #available(iOS 13.0, *) {
+                    if self.centralManager.state == .poweredOff {
+                        self.centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionShowPowerAlertKey: true])
+                    } else if self.centralManager.authorization == .allowedAlways {
+                        // Если хочешь показать экран поиска (как при нажатии кнопки):
+                        let vc = PenSearchViewController.instance()
+                        self.present(vc, animated: true, completion: nil)
+                    }
+                }
+            }
+        
+        
         PenHelper.shared.connectDelegate = { [weak self] (success) -> () in
             if (success) {
                 self?.penConnectBool = true
                 self?.pencilSetBtn.isEnabled = true
-                self?.pencilSetBtn.tintColor = UIColor.black
+                self?.pencilSetBtn.tintColor = UIColor.lightGray
                 if #available(iOS 13.0, *) {
                     self?.pencilConBtn.image = UIImage(systemName: "pencil")
                 } else {
@@ -123,6 +146,7 @@ class MainViewController: UIViewController {
                     self?.pageInfo = dot.pageInfo
                     DispatchQueue.main.async {
                         self?.navigationItem.title = "page \(self?.pageInfo.page ?? 0) note \(self?.pageInfo.note ?? 0)"
+                        self?.navigationItem.titleView?.tintColor = UIColor.gray
                         self?.renderStrokeView.clear()
                     }
                 }
@@ -336,6 +360,18 @@ extension MainViewController {
                 }
                 
                 symbollist = note261Data.symbolList
+                
+                // Хардкод: обработка страниц > pageList.count
+                let pageCount = note261Data.pageList.count
+                var effectivePage = page
+                if pageCount > 0 {
+                    effectivePage = page % pageCount  // Циклично берём из существующих, если page >= pageCount
+                    page = effectivePage
+                } else {
+                    print("pageList is empty")
+                    return
+                }
+                
                 rect = CGRect(x: CGFloat(note261Data.pageList[page].x1 + note261Data.pageList[page].crop_margin_left),
                               y: CGFloat(note261Data.pageList[page].y1 + note261Data.pageList[page].crop_margin_top),
                               width: CGFloat(note261Data.pageList[page].x2 - (note261Data.pageList[page].crop_margin_left + note261Data.pageList[page].crop_margin_right)),

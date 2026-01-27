@@ -73,10 +73,12 @@ class PenSearchViewController: UIViewController ,UIGestureRecognizerDelegate{
 //            UserDefaults.standard.set(nil, forKey: "mac")
             self.penFinder.scan(10.0)
         }
+        PenHelper.shared.opened = true
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        PenHelper.shared.opened = false
     }
     
     deinit {
@@ -88,6 +90,11 @@ class PenSearchViewController: UIViewController ,UIGestureRecognizerDelegate{
     }
 
     @IBAction func penSearchRefreshBtnClicked(_ sender: UIButton) {
+        penList.removeAll()
+        penFinder.scan(10.0)
+    }
+    
+    func refreshSearch() {
         penList.removeAll()
         penFinder.scan(10.0)
     }
@@ -151,6 +158,13 @@ extension PenSearchViewController: PenFinderDelegate{
         if pen.subName.isEmpty{
             return
         }
+        
+        let defaultMac = "9c7bd21a2341"
+        let savedBaseMac = UserDefaults.standard.string(forKey: "MacBase") ?? defaultMac
+        if pen.mac == savedBaseMac && PenHelper.shared.needToConnect {
+            PenFinder.shared.connectPeripheral(peripheral)
+        }
+        
         penList.append((peripheral, pen))
         DispatchQueue.main.async {
             self.tableView.reloadData()
@@ -159,6 +173,7 @@ extension PenSearchViewController: PenFinderDelegate{
     
     func didDisconnect(_ central: CBCentralManager, _ peripheral: CBPeripheral?, _ error: Error?) {
         print("Disconnected pen")
+        PenHelper.shared.clearPen()
         if central.isScanning {
             print("scanning")
         } else {

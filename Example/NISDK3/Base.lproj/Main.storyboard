@@ -32,42 +32,43 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view alpha="0.69999999999999996" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VFH-Xc-Vn5">
-                                <rect key="frame" x="360" y="853" width="19" height="19"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" maximumZoomScale="10" translatesAutoresizingMaskIntoConstraints="NO" id="2em-c0-A5V">
                                 <rect key="frame" x="0.0" y="140" width="414" height="756"/>
                             </scrollView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7Mo-ly-jZV">
-                                <rect key="frame" x="5" y="145" width="30" height="50"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.10000000000000001" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7Mo-ly-jZV">
+                                <rect key="frame" x="75" y="85" width="30" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="1G4-T3-7nZ"/>
                                     <constraint firstAttribute="height" constant="50" id="Rsi-Hq-img"/>
                                 </constraints>
                             </imageView>
+                            <view contentMode="scaleToFill" id="mKP-Oj-sGM">
+                                <rect key="frame" x="207" y="448" width="0.0" height="0.0"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="taV-jh-i0d"/>
-                        <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="2em-c0-A5V" firstAttribute="leading" secondItem="Oit-V4-5GI" secondAttribute="leading" id="20A-Aa-Ygm"/>
-                            <constraint firstItem="7Mo-ly-jZV" firstAttribute="top" secondItem="taV-jh-i0d" secondAttribute="top" constant="5" id="5d3-Cw-4zI"/>
-                            <constraint firstItem="7Mo-ly-jZV" firstAttribute="leading" secondItem="taV-jh-i0d" secondAttribute="leading" constant="5" id="Cef-IX-2gg"/>
+                            <constraint firstItem="7Mo-ly-jZV" firstAttribute="top" secondItem="taV-jh-i0d" secondAttribute="top" constant="-55" id="5d3-Cw-4zI"/>
+                            <constraint firstItem="7Mo-ly-jZV" firstAttribute="leading" secondItem="taV-jh-i0d" secondAttribute="leading" constant="75" id="Cef-IX-2gg"/>
                             <constraint firstAttribute="trailing" secondItem="2em-c0-A5V" secondAttribute="trailing" id="UMT-MS-VYN"/>
                             <constraint firstItem="2em-c0-A5V" firstAttribute="top" secondItem="taV-jh-i0d" secondAttribute="top" id="WCh-iC-hQz"/>
                             <constraint firstAttribute="bottom" secondItem="2em-c0-A5V" secondAttribute="bottom" id="X91-VD-BEK"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="0Mf-3A-4UH">
+                        <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="Item" image="pencil.slash" catalog="system" id="top-wo-Igj">
-                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="pencilConBtnClicked:" destination="I3G-AF-Vie" id="wfT-wh-lAV"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="staroflife.fill" catalog="system" id="AdB-Sv-XGw">
-                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="pencilSetBtnClicked:" destination="I3G-AF-Vie" id="e2k-DS-sQJ"/>
                             </connections>
@@ -279,20 +280,20 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="NoteCell" id="b1o-E2-YFv" customClass="NoteCell" customModule="NISDK3_Example" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="50" width="414" height="41.5"/>
+                                        <rect key="frame" x="0.0" y="50" width="414" height="42"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="b1o-E2-YFv" id="JuO-9x-uXP">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="41.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="42"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q98-OE-Orz">
-                                                    <rect key="frame" x="16" y="10" width="382" height="21.5"/>
+                                                    <rect key="frame" x="16" y="10" width="382" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gSp-Ct-rBW">
-                                                    <rect key="frame" x="333.5" y="3" width="73.5" height="35"/>
+                                                    <rect key="frame" x="333.5" y="3" width="73.5" height="35.5"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" title="Delete"/>
                                                     <connections>

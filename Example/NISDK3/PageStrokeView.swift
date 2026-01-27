@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import CoreGraphics
 import NISDK3
+import CoreBluetooth
 
 class PageStrokeView: UIView {
 
@@ -28,6 +29,16 @@ class PageStrokeView: UIView {
     var hoverLayer: CAShapeLayer!
     var hoverPath: UIBezierPath!
     private var hoverRadius = CGFloat(5)
+    var onNeedConnect: (() -> Void)?   // ← новое свойство
+
+    var needToConnect: Bool = false {
+        didSet {
+            if needToConnect {
+                onNeedConnect?()           // вызываем, когда флаг стал true
+                //needToConnect = false      // сбрасываем, чтобы не дёргать много раз
+            }
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -69,7 +80,7 @@ class PageStrokeView: UIView {
         UIGraphicsBeginImageContext(frame.size)
         shapelayer = CAShapeLayer()
         shapelayer.lineWidth = 1
-        shapelayer.strokeColor = UIColor.black.cgColor
+        shapelayer.strokeColor = UIColor.white.cgColor
         shapelayer.fillColor = UIColor.clear.cgColor
         shapelayer.lineCap = CAShapeLayerLineCap.round
         layer.addSublayer(shapelayer)
@@ -98,6 +109,7 @@ class PageStrokeView: UIView {
     }
     
     func updateConnectionIndicator(_ status: ConnectionStatus) {
+        print("Меняем индикатор")
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.2) {
                 switch status {
@@ -111,16 +123,19 @@ class PageStrokeView: UIView {
             }
             
             if status == .successFlash {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
                     self.checkServerConnection()
                 }
             }
+            print("Поменяли")
         }
     }
     
     func checkServerConnection() {
         let defaultBaseURL = "91.197.0.41:5252"
+        
         let savedBaseURL = UserDefaults.standard.string(forKey: "ServerBaseURL") ?? defaultBaseURL
+        
         var fullURLString = "http://\(savedBaseURL)/health"
         
         if savedBaseURL.hasPrefix("http://") || savedBaseURL.hasPrefix("https://") {
@@ -134,9 +149,34 @@ class PageStrokeView: UIView {
             return
         }
         
+        PenHelper.shared.needToConnect = true
+        let isConn = PenHelper.shared.isConnected ?? false
+        // Предполагаем, что у тебя есть значение для connectedPen
+        let connectedPenValue: Any = isConn
+            ? (PenHelper.shared.pen?.macAddress ?? "NaN")
+            : "NaN"
+        
+        // или например: let connectedPenValue = true
+
+        let jsonBody: [String: Any] = [
+            "connectedPen": connectedPenValue
+        ]
+        
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = "POST"
         request.timeoutInterval = 5.0
+        
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonBody, options: [])
+            request.httpBody = jsonData
+        } catch {
+            print("Ошибка сериализации JSON: \(error)")
+            DispatchQueue.main.async {
+                self.updateConnectionIndicator(.disconnected)
+            }
+            return  // или continue — решай сам
+        }
         
         URLSession.shared.dataTask(with: request) { _, response, error in
             // ВСЁ, что меняет UI — только в main!
@@ -148,6 +188,19 @@ class PageStrokeView: UIView {
                 
                 if let httpResponse = response as? HTTPURLResponse,
                    (200...299).contains(httpResponse.statusCode) || httpResponse.statusCode == 405 {  // 405 тоже нормально — метод не поддерживается, но сервер жив
+                    if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 252
+                    {
+                        if !PenHelper.shared.opened{
+                            self.needToConnect = true
+                        } else {
+                            PenFinder.shared.scanStop()
+                            PenFinder.shared.scan(10.0)
+                        }
+                        
+                    } else {
+                        self.needToConnect = false
+                    }
+ 
                     self.updateConnectionIndicator(.connected)
                 } else {
                     self.updateConnectionIndicator(.disconnected)

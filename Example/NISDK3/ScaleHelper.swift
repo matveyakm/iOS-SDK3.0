@@ -50,6 +50,17 @@ class ScaleHelper {
                 return
             }
             
+            // Хардкод: обработка страниц > pageList.count
+            let pageCount = pageData.pageList.count
+            var effectivePage = p.page
+            if pageCount > 0 {
+                effectivePage = p.page % pageCount  // Циклично берём из существующих, если page >= pageCount
+                p.page = effectivePage
+            } else {
+                print("pageList is empty")
+                return
+            }
+            
             let crop_margin_left = CGFloat(pageData.pageList[p.page].crop_margin_left)
             let crop_margin_right = CGFloat(pageData.pageList[p.page].crop_margin_right)
             let crop_margin_top = CGFloat(pageData.pageList[p.page].crop_margin_top)

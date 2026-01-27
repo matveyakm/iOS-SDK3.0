@@ -56,7 +56,7 @@ class RenderStrokeView: UIView {
         }
         dotlayer.path = path.cgPath
         dotlayer.lineWidth = 1
-        dotlayer.strokeColor = UIColor.black.cgColor
+        dotlayer.strokeColor = UIColor.white.cgColor
         dotlayer.fillColor = UIColor.clear.cgColor
         dotlayer.lineCap = CAShapeLayerLineCap.round
         self.layer.addSublayer(dotlayer)

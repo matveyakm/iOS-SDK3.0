@@ -108,7 +108,7 @@ class PenSettingViewController: UIViewController {
 
 extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 14
+        return 15
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -181,6 +181,13 @@ extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
             cell.settingValue.text = savedBase + " ▼"  // Стрелка, чтобы было похоже на другие настройки
             
             cellValueHidden(cell: cell, switchHidden: true, settingValueHidden: false)
+        }else if row == 14 {
+            cell.SettingName.text = "MacAdress for AutoConnection"
+            let defaultMac = "9c7bd21a2341"
+            let savedBase = UserDefaults.standard.string(forKey: "MacBase") ?? defaultMac
+            cell.settingValue.text = savedBase + " ▼"  // Стрелка, чтобы было похоже на другие настройки
+            
+            cellValueHidden(cell: cell, switchHidden: true, settingValueHidden: false)
         }
         
         return cell
@@ -210,6 +217,8 @@ extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
             self.navigationController?.pushViewController(vc, animated: true)
         }else if indexPath.row == 13 {
             showServerURLAlert()
+        }else if indexPath.row == 14 {
+            showMacAlert()
         }
         deselectTable()
     }
@@ -233,6 +242,37 @@ extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
             let saved = UserDefaults.standard.string(forKey: "ServerBaseURL") ?? defaultURL
             textField.text = saved
             textField.placeholder = "IP:port"
+            textField.keyboardType = .numbersAndPunctuation
+        }
+        
+        saveAction.isEnabled = true  // Можно включить сразу или добавить валидацию по желанию
+        
+        alertController.addAction(saveAction)
+        alertController.addAction(cancelAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func showMacAlert() {
+        let alertController = UIAlertController(title: "Mac Adress", message: "Введите Mac ручки для автоподключения (например: 9c7bd21a2341)", preferredStyle: .alert)
+        
+        let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
+            if let textField = alertController.textFields?.first,
+               let text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+               !text.isEmpty {
+                // Сохраняем только base часть (IP:port)
+                UserDefaults.standard.set(text, forKey: "MacBase")
+                self.tableView.reloadRows(at: [IndexPath(row: 13, section: 0)], with: .automatic)
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        
+        alertController.addTextField { textField in
+            let defaultMac = "9c7bd21a2341"
+            let saved = UserDefaults.standard.string(forKey: "MacBase") ?? defaultMac
+            textField.text = saved
+            textField.placeholder = "MacAdress"
             textField.keyboardType = .numbersAndPunctuation
         }
         

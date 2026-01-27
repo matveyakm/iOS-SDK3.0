@@ -39,6 +39,9 @@ class PenHelper: PenDelegate{
     var fwUpdateSuccessDelegate: ((_ success: Bool) -> ())?
      
     var pen:PenController?
+    var isConnected: Bool?
+    var needToConnect:Bool = false
+    var opened:Bool = false
     var connectingArr: [(pen: CBPeripheral, penAd: PenAdvertisementStruct)] = []
     var dotArr:[Dot] = []
     var dotsDataDelegate: ((OffLineData) -> ())?
@@ -151,8 +154,12 @@ class PenHelper: PenDelegate{
     
     func setPen(pen : PenController){
         self.pen = pen
+        self.isConnected = true
         self.pen?.setPenDelegate(self)
         self.pen?.showSDKLog(true)
     }
     
+    func clearPen() {
+        self.isConnected = false 
+    }
 }
